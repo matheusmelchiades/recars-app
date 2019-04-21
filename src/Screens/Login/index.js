@@ -7,7 +7,7 @@ import Signin from './Signin';
 import Signup from './Signup';
 
 
-export class Login extends Component {
+class Login extends Component {
   state = {
     tab: 0
   }
@@ -19,20 +19,28 @@ export class Login extends Component {
 
   signin = async (values) => {
     try {
+      // values = { username: "admin", password: "Matheus0711" }
       const resp = await signin(values)
 
       if (resp.status !== 200) return
 
       API.defaults.headers.common['Authorization'] = `bearer ${resp.data.token}`
 
-      this.props.history.push('case')
+      this.props.history.push('/')
     } catch (err) {
       console.log(err)
     }
   }
 
   signup = async (values) => {
-    console.log(values)
+    try {
+      const resp = await signup(values)
+
+      if (resp.status !== 200) return
+
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   render() {

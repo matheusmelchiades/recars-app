@@ -1,12 +1,6 @@
 import axios from 'axios';
 
-const key = process.env.REACT_APP_API_IMAGE_KEY || ''
-const url = process.env.REACT_APP_API_IMAGE_URL || ''
-const api_url = process.env.REACT_APP_API || ''
-
-const headers = {
-  'Ocp-Apim-Subscription-Key': key
-}
+const api_url = process.env.REACT_APP_API || 'http://192.168.0.53:5000'
 
 const API = axios.create({
   baseURL: api_url
@@ -33,8 +27,7 @@ export const signup = (data) => {
 export const searchImageCar = (model = '', branch = '') => {
   return API({
     method: 'GET',
-    url: `${url}?q=${model}%20${branch}%20carro&count=15`,
-    headers
+    url: `/images?search=${model}%20${branch}`,
   })
 };
 
@@ -43,7 +36,6 @@ export const searchBrand = (brand) => {
   return API({
     method: 'GET',
     url: `/brands?search=${brand}`,
-    headers
   })
 }
 
@@ -53,6 +45,28 @@ export const searchModel = (brand, model) => {
   return API({
     method: 'GET',
     url: `/models?brand=${brand}&search=${model}`,
-    headers
+  })
+}
+
+export const createCase = (oneCase) => {
+  return API({
+    method: 'POST',
+    url: '/cases',
+    data: { oneCase }
+  })
+}
+
+export const getPendencies = () => {
+  return API({
+    method: 'GET',
+    url: '/cases/pending'
+  })
+}
+
+export const approvePendencies = (data) => {
+  return API({
+    method: 'POST',
+    url: '/cases/pending',
+    data
   })
 }

@@ -103,7 +103,7 @@ class CreateCase extends Component {
     try {
       const response = await API.searchImageCar(model, brand)
 
-      this.setState({ data: { ...this.state.data, searchCar: response.data.value } })
+      this.setState({ data: { ...this.state.data, searchCar: response.data } })
     } catch (err) {
       console.log(err)
     }
@@ -121,7 +121,7 @@ class CreateCase extends Component {
           searchCar.map((value, index) => (
             <Card key={index} className={classes.containerCar}
               onClick={() => this.handleSelectImage(value)}>
-              <img src={value.thumbnailUrl} height={355} width={550} alt={value.name} />
+              <img src={value.url} height={355} width={550} alt={value.name} />
             </Card>
           ))
         }
@@ -133,12 +133,9 @@ class CreateCase extends Component {
     const caseCurrent = this.state.newCase
 
     if (caseCurrent.images.length === 2) return
-    if (caseCurrent.images.some((image) => image.url === img.thumbnailUrl)) return
+    if (caseCurrent.images.some((image) => image._id === img._id)) return
 
-    caseCurrent.images.push({
-      name: img.name,
-      url: img.thumbnailUrl
-    })
+    caseCurrent.images.push(img)
 
     this.setState({ newCase: { ...caseCurrent } }, this.handleResult)
   }
@@ -155,7 +152,7 @@ class CreateCase extends Component {
           images.map((value, index) => (
             <Card key={index} className={classes.containerCar}
               onClick={() => this.removeSelected(value)}>
-              <img src={value.url} height={355} width={550} alt={value.name} />
+              <img src={value.url} height={350} width={550} alt={value.name} />
             </Card>
           ))
         }
@@ -168,7 +165,7 @@ class CreateCase extends Component {
 
     if (!images.length) return
 
-    const imageRemoved = images.filter((image) => image.name !== img.name)
+    const imageRemoved = images.filter((image) => image._id !== img._id)
 
     this.setState({ newCase: { ...this.state.newCase, images: imageRemoved } }, this.handleResult)
   }
@@ -182,8 +179,16 @@ class CreateCase extends Component {
     this.setState({ ...this.getInitState() })
   }
 
-  handleCreateCase = () => {
+  handleCreateCase = async () => {
+    try {
+      const response = await API.createCase(this.state.newCase)
 
+      if (!response !== 200) return
+
+      console.log(response)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   async handlerSearchBrand(value) {
