@@ -5,11 +5,17 @@ import styles from './style';
 import SwipeableView from 'react-swipeable-views'
 import Signin from './Signin';
 import Signup from './Signup';
+import Snackbar from '../../components/Snackbar';
 
 
 class Login extends Component {
   state = {
-    tab: 0
+    tab: 0,
+    loader: {
+      open: false,
+      type: 'info',
+      message: ''
+    }
   }
 
   handleChange = () => {
@@ -19,7 +25,6 @@ class Login extends Component {
 
   signin = async (values) => {
     try {
-      // values = { username: "admin", password: "Matheus0711" }
       const resp = await signin(values)
 
       if (resp.status !== 200) return
@@ -29,6 +34,16 @@ class Login extends Component {
       this.props.history.push('/')
     } catch (err) {
       console.log(err)
+
+      this.setState({
+        ...this.state,
+        loader: {
+          ...this.state.loader,
+          open: true,
+          type: 'error',
+          message: 'Username or Senha incorretos!'
+        }
+      })
     }
   }
 
@@ -38,8 +53,27 @@ class Login extends Component {
 
       if (resp.status !== 200) return
 
+      this.setState({
+        ...this.state,
+        loader: {
+          ...this.state.loader,
+          open: true,
+          type: 'success',
+          message: 'Cadastrado com sucesso!'
+        }
+      }, this.handleChange)
     } catch (err) {
       console.log(err)
+
+      this.setState({
+        ...this.state,
+        loader: {
+          ...this.state.loader,
+          open: true,
+          type: 'error',
+          message: 'Username or Senha incorretos!'
+        }
+      })
     }
   }
 
@@ -63,7 +97,13 @@ class Login extends Component {
               this.state.tab === 1 ? <Signup onSignup={this.signup} /> : <div></div>
             }
           </SwipeableView>
+
         </Paper>
+        <Snackbar
+          isOpen={this.state.loader.open}
+          type={this.state.loader.type}
+          message={this.state.loader.message}
+          onClose={() => this.setState({ ...this.state, loader: { ...this.state.loader, open: false } })} />
       </div>
     )
   }

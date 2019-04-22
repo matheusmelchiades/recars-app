@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api_url = process.env.REACT_APP_API || 'http://192.168.0.53:5000'
+const api_url = process.env.REACT_APP_API || 'http://192.168.0.15:5000'
 
 const API = axios.create({
   baseURL: api_url
@@ -53,6 +53,13 @@ export const createCase = (oneCase) => {
     method: 'POST',
     url: '/cases',
     data: { oneCase }
+  })
+}
+
+export const getAttributes = () => {
+  return API({
+    method: 'GET',
+    url: '/attributes/createCase',
   })
 }
 

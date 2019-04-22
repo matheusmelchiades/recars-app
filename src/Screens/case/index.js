@@ -6,28 +6,20 @@ import Search from './search/index'
 import CreateCase from './createCase/CreateCase'
 import Penging from './penging/index'
 import API from '../../services/api';
-
-const teste = [
-  {
-    "path": "/",
-    "label": "Pesquisa"
-  },
-  {
-    "path": "/case",
-    "label": "Novo Caso"
-  },
-  {
-    "path": "/penging",
-    "label": "Pendencias"
-  }
-]
+import Snackbar from '../../components/Snackbar';
 
 export class index extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {}
-    this.state.menuOptions = teste
+    this.state = {
+      loader: {
+        open: false,
+        type: 'info',
+        message: ''
+      }
+    }
+    this.state.menuOptions = []
   }
 
   async componentDidMount() {
@@ -36,10 +28,28 @@ export class index extends Component {
 
       if (response.status !== 200) return
 
-      // this.setState({ menuOptions: response.data.menu })
+      this.setState({ menuOptions: response.data.menu })
 
+      this.setState({
+        ...this.state,
+        loader: {
+          ...this.state.loader,
+          open: true,
+          type: 'success',
+          message: 'Autenticado com successo!'
+        }
+      })
     } catch (err) {
       console.log(err)
+      this.setState({
+        ...this.state,
+        loader: {
+          ...this.state.loader,
+          open: true,
+          type: 'error',
+          message: 'Usuario nao autenticado!'
+        }
+      })
     }
   }
 
@@ -55,6 +65,11 @@ export class index extends Component {
             <Route path='/penging' component={Penging} />
           </div>
         }
+        <Snackbar
+          isOpen={this.state.loader.open}
+          type={this.state.loader.type}
+          message={this.state.loader.message}
+          onClose={() => this.setState({ ...this.state, loader: { ...this.state.loader, open: false } })} />
       </div>
     )
   }

@@ -2,20 +2,14 @@ import React, { Component } from 'react'
 import * as API from '../../../services/api'
 import {
   withStyles, FormControl, TextField, InputLabel,
-  MenuItem, Select, OutlinedInput, Card, Fab
+  MenuItem, Select, OutlinedInput, Card, Fab, CircularProgress
 } from '@material-ui/core'
 import Autocomplete from '../../../components/Autocomplete'
 
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import CloseIcon from '@material-ui/icons/Close'
-
-const DATA_SELECT = [
-  'TESTE 1',
-  'TESTE 2',
-  'TESTE 3',
-  'TESTE 4'
-]
+import Snackbar from '../../../components/Snackbar';
 
 class CreateCase extends Component {
   constructor(props) {
@@ -23,11 +17,18 @@ class CreateCase extends Component {
     this.state = this.getInitState()
   }
 
+  componentDidMount() { this.refresh() }
+
   getInitState = () => {
     return {
       clear: false,
       result: '',
       selecteds: {},
+      loader: {
+        open: false,
+        type: 'info',
+        message: ''
+      },
       newCase: {
         brand: '',
         model: '',
@@ -35,19 +36,33 @@ class CreateCase extends Component {
         type: '',
         generalUse: '',
         competence: '',
-        price: '',
+        priceAverage: 0,
         images: []
       },
       data: {
         brands: [],
         models: [],
-        category: DATA_SELECT,
-        type: DATA_SELECT,
-        generalUse: DATA_SELECT,
-        competence: DATA_SELECT,
+        category: [],
+        type: [],
+        generalUse: [],
+        competence: [],
       }
     }
   }
+
+  refresh = async () => {
+    try {
+      const response = await API.getAttributes();
+
+      if (response.status !== 200) return
+
+      this.setState({ data: { ...this.state.data, ...response.data } })
+    } catch (err) {
+      console.log(err)
+
+      this.showSnackBar('error', 'Erro em buscar atributos!')
+    }
+  };
 
   handleChangeInput = (field, input) => {
     const stateInput = this.state.newCase
@@ -56,8 +71,9 @@ class CreateCase extends Component {
     if (field === 'brand')
       this.handlerSearchBrand(input)
 
-    if (field === 'model')
+    if (field === 'model') {
       this.handlerSearchModel(input)
+    }
 
     this.setState({ newCase: stateInput }, this.handleResult)
   }
@@ -70,7 +86,6 @@ class CreateCase extends Component {
       <FormControl variant="outlined" className={classes.field}>
         <InputLabel>{label}</InputLabel>
         <Select
-          // value={this.state.newCase[field]}
           onChange={(e) => this.handleChangeInput(field, e.target.value)}
           input={
             <OutlinedInput
@@ -101,11 +116,16 @@ class CreateCase extends Component {
     if (!model && !brand) return
 
     try {
+      this.setState({ ...this.state, isLoading: true })
       const response = await API.searchImageCar(model, brand)
 
-      this.setState({ data: { ...this.state.data, searchCar: response.data } })
+      if (!response.data.length) throw Error
+
+      this.setState({ data: { ...this.state.data, searchCar: response.data }, isLoading: false })
     } catch (err) {
       console.log(err)
+      this.setState({ ...this.state, isLoading: false })
+      this.showSnackBar('error', 'Erro em buscar as imagens!')
     }
   }
 
@@ -119,7 +139,7 @@ class CreateCase extends Component {
       <div className={classes.options}>
         {
           searchCar.map((value, index) => (
-            <Card key={index} className={classes.containerCar}
+            <Card key={index} className={classes.containerCar} elevation={10}
               onClick={() => this.handleSelectImage(value)}>
               <img src={value.url} height={355} width={550} alt={value.name} />
             </Card>
@@ -176,18 +196,24 @@ class CreateCase extends Component {
     if (clearBrand) clearBrand()
     if (clearModel) clearModel()
 
-    this.setState({ ...this.getInitState() })
+    this.setState({ ...this.getInitState() }, this.refresh)
   }
 
   handleCreateCase = async () => {
+    if (!this.isValidCase()) return
+
     try {
       const response = await API.createCase(this.state.newCase)
 
-      if (!response !== 200) return
+      if (response.status >= 222) {
+        return this.showSnackBar('error', 'Caso ja cadastrado!')
+      }
 
-      console.log(response)
+      this.clearAll()
+      this.showSnackBar('success', 'Caso criado com sucesso!')
     } catch (err) {
       console.log(err)
+      this.showSnackBar('error', 'Erro em criar caso!')
     }
   }
 
@@ -200,6 +226,8 @@ class CreateCase extends Component {
       this.setState({ ...this.state, data: { ...this.state.data, brands: response.data } })
     } catch (err) {
       console.log(err)
+
+      this.showSnackBar('error', 'Erro em buscar a marca!')
     }
   }
 
@@ -214,14 +242,53 @@ class CreateCase extends Component {
       this.setState({ ...this.state, data: { ...this.state.data, models: response.data } })
     } catch (err) {
       console.log(err)
+
+      this.showSnackBar('error', 'Erro em buscar o modelo!')
     }
+  }
+
+
+  isValidCase = () => {
+    const newCase = this.state.newCase
+
+    if (newCase.images.length < 2)
+      return this.showSnackBar('info', 'Duas images devem ser selecionada!')
+    if (!newCase.brand)
+      return this.showSnackBar('info', 'Marca não foi selecionado!')
+    if (!newCase.model)
+      return this.showSnackBar('info', 'Modelo não foi selecionado!')
+    if (!newCase.category)
+      return this.showSnackBar('info', 'Categoria não foi selecionado!')
+    if (!newCase.type)
+      return this.showSnackBar('info', 'Tipo foi selecionado!')
+    if (!newCase.generalUse)
+      return this.showSnackBar('info', 'Uso geral não foi selecionado!')
+    if (!newCase.competence)
+      return this.showSnackBar('info', 'Competencia não foi selecionado!')
+    if (newCase.priceAverage <= 0)
+      return this.showSnackBar('info', 'Media deve ser maio que 0')
+
+    return true;
+  }
+
+  showSnackBar = (type, message) => {
+    this.setState({
+      ...this.setState,
+      loader: {
+        ...this.state.loader,
+        open: true,
+        message,
+        type
+      }
+    })
+    return false
   }
 
   render() {
     const { classes } = this.props
     return (
       <div className={classes.container}>
-        {
+        {/* {
           this.state.result ?
             <div>
               {
@@ -229,7 +296,7 @@ class CreateCase extends Component {
               }
             </div>
             : false
-        }
+        } */}
         <div className={classes.form}>
 
           <Fab className={classes.button} color="primary" onClick={this.clearAll} aria-label="Add">
@@ -248,6 +315,7 @@ class CreateCase extends Component {
 
           <Autocomplete value={this.state.newCase.brand} label="Modelo"
             clearInput={(clear) => this.setState({ clearModel: clear })}
+            selectItem={(value) => this.handleChangeInput('priceAverage', value.priceAverage)}
             data={this.state.data.models} scroll fieldRender="name" noFilter
             onChange={(value) => this.handleChangeInput('model', value)} />
 
@@ -265,8 +333,7 @@ class CreateCase extends Component {
           }
 
           <TextField className={classes.field} label="Preço" variant="outlined"
-            value={this.state.newCase.price}
-            onChange={(e) => this.handleChangeInput('price', e.target.value)} />
+            value={this.state.newCase.priceAverage} />
 
           <Fab className={classes.button} color="primary" onClick={this.handleCreateCase} aria-label="Add">
             <AddIcon />
@@ -275,9 +342,27 @@ class CreateCase extends Component {
         {
           this.renderImagesSelectds()
         }
+
         {
           this.renderCardCar()
         }
+
+        {
+          this.state.isLoading &&
+          <CircularProgress
+            variant="indeterminate"
+            disableShrink
+            className={classes.loader}
+            size={24}
+            thickness={4}
+          />
+        }
+        <Snackbar
+          isOpen={this.state.loader.open}
+          type={this.state.loader.type}
+          message={this.state.loader.message}
+          onClose={() => this.setState({ ...this.state, loader: { ...this.state.loader, open: false } })} />
+
       </div>
     )
   }
@@ -310,16 +395,17 @@ const styles = theme => {
     button: {
       margin: theme.spacing.unit,
       width: 500,
-      // backgroundColor: '#8e24aa',
-      // color: 'white'
     },
-
-
-    //
     containerCar: {
       margin: theme.spacing.unit,
       minWidth: 550,
       borderRadius: 15
+    },
+    loader: {
+      marginTop: theme.spacing.unit * 40,
+      animationDuration: '550ms',
+      position: 'absolute',
+      left: '50%',
     }
   })
 }

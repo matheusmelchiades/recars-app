@@ -25,7 +25,6 @@ export class Penging extends Component {
       const response = await getPendencies();
 
       if (response.status !== 200) return
-      console.log(response.data)
 
       this.setState({ pending: response.data })
     } catch (err) {
@@ -77,7 +76,7 @@ export class Penging extends Component {
 
     return (
       <div>
-        <Button onClick={this.handleApproveSelecteds}>
+        <Button onClick={this.handleApproveSelecteds} variant="contained">
           Add
         </Button>
         <Paper className={classes.container}>
@@ -93,7 +92,7 @@ export class Penging extends Component {
                 <TableCell align="center">Type</TableCell>
                 <TableCell align="center">GeneralUse</TableCell>
                 <TableCell align="center">Competence</TableCell>
-                <TableCell align="center">Price</TableCell>
+                <TableCell align="center">Price Average</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -112,7 +111,7 @@ export class Penging extends Component {
                       <TableCell align="center">{newCase.type}</TableCell>
                       <TableCell align="center">{newCase.generalUse}</TableCell>
                       <TableCell align="center">{newCase.competence}</TableCell>
-                      <TableCell align="center">{newCase.price}</TableCell>
+                      <TableCell align="center">{newCase.priceAverage}</TableCell>
                     </TableRow>
                   )
                 })
