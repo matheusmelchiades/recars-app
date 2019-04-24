@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import helper from '../../helper/auth'
 import API, { signin, signup } from '../../services/api'
 import { withStyles, Tabs, Tab, Paper } from '@material-ui/core';
 import styles from './style';
@@ -29,9 +30,9 @@ class Login extends Component {
 
       if (resp.status !== 200) return
 
-      API.defaults.headers.common['Authorization'] = `bearer ${resp.data.token}`
-
+      helper.setUser(resp.data)
       this.props.history.push('/')
+
     } catch (err) {
       console.log(err)
 

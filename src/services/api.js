@@ -77,3 +77,10 @@ export const approvePendencies = (data) => {
     data
   })
 }
+
+export const checkAuth = () => {
+  return API({
+    method: 'GET',
+    url: '/auth'
+  })
+}

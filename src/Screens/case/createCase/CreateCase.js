@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as API from '../../../services/api'
 import {
-  withStyles, FormControl, TextField, InputLabel,
+  withStyles, FormControl, InputLabel,
   MenuItem, Select, OutlinedInput, Card, Fab, CircularProgress
 } from '@material-ui/core'
 import Autocomplete from '../../../components/Autocomplete'
@@ -36,7 +36,6 @@ class CreateCase extends Component {
         type: '',
         generalUse: '',
         competence: '',
-        priceAverage: 0,
         images: []
       },
       data: {
@@ -265,8 +264,6 @@ class CreateCase extends Component {
       return this.showSnackBar('info', 'Uso geral não foi selecionado!')
     if (!newCase.competence)
       return this.showSnackBar('info', 'Competencia não foi selecionado!')
-    if (newCase.priceAverage <= 0)
-      return this.showSnackBar('info', 'Media deve ser maio que 0')
 
     return true;
   }
@@ -299,13 +296,17 @@ class CreateCase extends Component {
         } */}
         <div className={classes.form}>
 
-          <Fab className={classes.button} color="primary" onClick={this.clearAll} aria-label="Add">
-            <CloseIcon />
-          </Fab>
+          <div className={classes.button}>
+            <Fab color="primary" onClick={this.clearAll} aria-label="Add">
+              <CloseIcon />
+            </Fab>
+          </div>
 
-          <Fab className={classes.button} color="primary" onClick={this.searchACarImages} aria-label="Add">
-            <SearchIcon />
-          </Fab>
+          <div className={classes.button}>
+            <Fab color="primary" onClick={this.searchACarImages} aria-label="Add">
+              <SearchIcon />
+            </Fab>
+          </div>
 
           <Autocomplete value={this.state.newCase.brand} label="Marca"
             clearInput={(clear) => this.setState({ clearBrand: clear })}
@@ -315,7 +316,6 @@ class CreateCase extends Component {
 
           <Autocomplete value={this.state.newCase.brand} label="Modelo"
             clearInput={(clear) => this.setState({ clearModel: clear })}
-            selectItem={(value) => this.handleChangeInput('priceAverage', value.priceAverage)}
             data={this.state.data.models} scroll fieldRender="name" noFilter
             onChange={(value) => this.handleChangeInput('model', value)} />
 
@@ -332,12 +332,12 @@ class CreateCase extends Component {
             this.renderSelect('competence', 'Competencia', this.state.data.competence)
           }
 
-          <TextField className={classes.field} label="Preço" variant="outlined"
-            value={this.state.newCase.priceAverage} />
+          <div className={classes.button}>
+            <Fab color="primary" onClick={this.handleCreateCase} aria-label="Add">
+              <AddIcon />
+            </Fab>
+          </div>
 
-          <Fab className={classes.button} color="primary" onClick={this.handleCreateCase} aria-label="Add">
-            <AddIcon />
-          </Fab>
         </div>
         {
           this.renderImagesSelectds()
@@ -394,7 +394,6 @@ const styles = theme => {
     },
     button: {
       margin: theme.spacing.unit,
-      width: 500,
     },
     containerCar: {
       margin: theme.spacing.unit,

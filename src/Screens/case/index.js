@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
+import helper from '../../helper/auth'
 import Menu from '../../components/Menu'
 
 import Search from './search/index'
@@ -24,6 +25,10 @@ export class index extends Component {
 
   async componentDidMount() {
     try {
+      const user = await helper.getUser()
+
+      API.defaults.headers.common['Authorization'] = `Bearer ${user.token}`
+
       const response = await API.get('/fields')
 
       if (response.status !== 200) return
@@ -50,6 +55,10 @@ export class index extends Component {
           message: 'Usuario nao autenticado!'
         }
       })
+
+      setTimeout(() => {
+        this.props.history.push('/login')
+      }, 3500);
     }
   }
 

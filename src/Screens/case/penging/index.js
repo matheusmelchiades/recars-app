@@ -92,7 +92,6 @@ export class Penging extends Component {
                 <TableCell align="center">Type</TableCell>
                 <TableCell align="center">GeneralUse</TableCell>
                 <TableCell align="center">Competence</TableCell>
-                <TableCell align="center">Price Average</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -111,7 +110,6 @@ export class Penging extends Component {
                       <TableCell align="center">{newCase.type}</TableCell>
                       <TableCell align="center">{newCase.generalUse}</TableCell>
                       <TableCell align="center">{newCase.competence}</TableCell>
-                      <TableCell align="center">{newCase.priceAverage}</TableCell>
                     </TableRow>
                   )
                 })
