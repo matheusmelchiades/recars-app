@@ -18,7 +18,8 @@ export class index extends Component {
         open: false,
         type: 'info',
         message: ''
-      }
+      },
+      auth: false
     }
     this.state.menuOptions = []
   }
@@ -33,7 +34,7 @@ export class index extends Component {
 
       if (response.status !== 200) return
 
-      this.setState({ menuOptions: response.data.menu })
+      this.setState({ menuOptions: response.data.menu, auth: true })
 
       this.setState({
         ...this.state,
@@ -55,15 +56,13 @@ export class index extends Component {
           message: 'Usuario nao autenticado!'
         }
       })
-
-      setTimeout(() => {
-        this.props.history.push('/login')
-      }, 3500);
+      this.props.history.push('/login')
     }
   }
 
   render() {
     return (
+      this.state.auth &&
       <div>
         <Menu menuOptions={this.state.menuOptions} />
         {
