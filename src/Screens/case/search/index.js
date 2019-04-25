@@ -51,7 +51,7 @@ class Search extends Component {
 
     return (
       <div className={classes.container}>
-
+      {\*
         <div className={classes.form}>
 
           <div className={classes.button}>
@@ -84,7 +84,7 @@ class Search extends Component {
               <SearchIcon />
             </Fab>
           </div>
-        </div>
+        </div>*/}
       </div>
     )
   }
