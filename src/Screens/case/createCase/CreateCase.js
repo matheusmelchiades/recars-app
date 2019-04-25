@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import * as API from '../../../services/api'
 import {
   withStyles, FormControl, InputLabel,
-  MenuItem, Select, OutlinedInput, Card, Fab, CircularProgress
+  MenuItem, Select, OutlinedInput, Card, Fab, CircularProgress, TextField, InputAdornment
 } from '@material-ui/core'
 import Autocomplete from '../../../components/Autocomplete'
 
@@ -36,6 +36,7 @@ class CreateCase extends Component {
         type: '',
         generalUse: '',
         competence: '',
+        priceAverage: 0,
         images: []
       },
       data: {
@@ -151,7 +152,7 @@ class CreateCase extends Component {
   handleSelectImage = (img) => {
     const caseCurrent = this.state.newCase
 
-    if (caseCurrent.images.length === 2) return
+    if (caseCurrent.images.length === 3) return
     if (caseCurrent.images.some((image) => image._id === img._id)) return
 
     caseCurrent.images.push(img)
@@ -248,22 +249,23 @@ class CreateCase extends Component {
 
 
   isValidCase = () => {
+    const { brandSelect, modelSelect } = this.state
     const newCase = this.state.newCase
 
-    if (newCase.images.length < 2)
-      return this.showSnackBar('info', 'Duas images devem ser selecionada!')
-    if (!newCase.brand)
+    if (!brandSelect)
       return this.showSnackBar('info', 'Marca não foi selecionado!')
-    if (!newCase.model)
+    if (!modelSelect)
       return this.showSnackBar('info', 'Modelo não foi selecionado!')
     if (!newCase.category)
       return this.showSnackBar('info', 'Categoria não foi selecionado!')
     if (!newCase.type)
-      return this.showSnackBar('info', 'Tipo foi selecionado!')
+      return this.showSnackBar('info', 'Tipo não foi selecionado!')
     if (!newCase.generalUse)
       return this.showSnackBar('info', 'Uso geral não foi selecionado!')
     if (!newCase.competence)
       return this.showSnackBar('info', 'Competencia não foi selecionado!')
+    if (newCase.images.length < 3)
+      return this.showSnackBar('info', 'Três images devem ser selecionada!')
 
     return true;
   }
@@ -285,15 +287,7 @@ class CreateCase extends Component {
     const { classes } = this.props
     return (
       <div className={classes.container}>
-        {/* {
-          this.state.result ?
-            <div>
-              {
-                this.state.result
-              }
-            </div>
-            : false
-        } */}
+
         <div className={classes.form}>
 
           <div className={classes.button}>
@@ -314,9 +308,13 @@ class CreateCase extends Component {
             selectItem={(item) => this.setState({ brandSelect: item })}
             onChange={(value) => this.handleChangeInput('brand', value)} />
 
-          <Autocomplete value={this.state.newCase.brand} label="Modelo"
+          <Autocomplete value={this.state.newCase.model} label="Modelo"
             clearInput={(clear) => this.setState({ clearModel: clear })}
             data={this.state.data.models} scroll fieldRender="name" noFilter
+            selectItem={(item) => {
+              this.handleChangeInput('priceAverage', item.priceAverage)
+              this.setState({ ...this.state, modelSelect: item })
+            }}
             onChange={(value) => this.handleChangeInput('model', value)} />
 
           {
@@ -331,6 +329,12 @@ class CreateCase extends Component {
           {
             this.renderSelect('competence', 'Competencia', this.state.data.competence)
           }
+
+          <TextField className={classes.field} label="Valor medio" value={this.state.newCase.priceAverage}
+            variant="outlined" fullWidth type="number" disabled
+            InputProps={{
+              startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+            }} />
 
           <div className={classes.button}>
             <Fab color="primary" onClick={this.handleCreateCase} aria-label="Add">
@@ -385,11 +389,12 @@ const styles = theme => {
     },
     selecteds: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      paddingTop: theme.spacing.unit * 2
     },
     options: {
       display: 'flex',
-      marginTop: theme.spacing.unit * 10,
+      marginTop: theme.spacing.unit * 4,
       overflowX: 'scroll'
     },
     button: {

@@ -84,3 +84,11 @@ export const checkAuth = () => {
     url: '/auth'
   })
 }
+
+
+export const getAttributesTosSearch = () => {
+  return API({
+    method: 'GET',
+    url: '/attributes/search'
+  })
+}

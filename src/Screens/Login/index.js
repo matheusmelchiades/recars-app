@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import helper from '../../helper/auth'
-import API, { signin, signup } from '../../services/api'
+import { signin, signup } from '../../services/api'
 import { withStyles, Tabs, Tab, Paper } from '@material-ui/core';
 import styles from './style';
 import SwipeableView from 'react-swipeable-views'

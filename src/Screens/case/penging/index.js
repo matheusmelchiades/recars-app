@@ -4,7 +4,7 @@ import {
   Paper, withStyles, Table, TableHead,
   TableBody, TableCell, TableRow, Checkbox, Button
 } from '@material-ui/core'
-
+import CheckIcon from '@material-ui/icons/Check'
 
 export class Penging extends Component {
 
@@ -92,6 +92,8 @@ export class Penging extends Component {
                 <TableCell align="center">Type</TableCell>
                 <TableCell align="center">GeneralUse</TableCell>
                 <TableCell align="center">Competence</TableCell>
+                <TableCell align="center">Price Average</TableCell>
+                <TableCell align="center">Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -110,6 +112,9 @@ export class Penging extends Component {
                       <TableCell align="center">{newCase.type}</TableCell>
                       <TableCell align="center">{newCase.generalUse}</TableCell>
                       <TableCell align="center">{newCase.competence}</TableCell>
+                      <TableCell align="center">{newCase.priceAverage}</TableCell>
+                      {/* <TableCell align="center"><CheckIcon /></TableCell> */}
+                      <TableCell align="center">{newCase.status}</TableCell>
                     </TableRow>
                   )
                 })
