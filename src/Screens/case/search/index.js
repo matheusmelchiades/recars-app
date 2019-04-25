@@ -51,8 +51,8 @@ class Search extends Component {
 
     return (
       <div className={classes.container}>
-      {\*
-        <div className={classes.form}>
+        SEARCH
+        {/* <div className={classes.form}>
 
           <div className={classes.button}>
             <Fab color="primary" onClick={this.clearAll} aria-label="Add">
@@ -84,7 +84,7 @@ class Search extends Component {
               <SearchIcon />
             </Fab>
           </div>
-        </div>*/}
+        </div> */}
       </div>
     )
   }
