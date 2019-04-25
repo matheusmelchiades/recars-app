@@ -1,8 +1,9 @@
-const setUser = (user) => window.localStorage.recars = JSON.stringify(user);
+const TAG = '@RECARS::USER'
 
-const getUser = () => {
-  if (!window.localStorage.recars) return {}
-  return JSON.parse(window.localStorage.recars)
-}
+const setUser = async (user) => await localStorage.setItem(TAG, JSON.stringify(user));
 
-export default { setUser, getUser }
+const getUser = async () => JSON.parse(await localStorage.getItem(TAG))
+
+const logOut = async () => await localStorage.removeItem(TAG)
+
+export default { setUser, getUser, logOut }

@@ -1,21 +1,29 @@
 import React, { Component } from 'react'
+import helper from '../helper/auth'
 import { withRouter } from 'react-router-dom'
-import { withStyles, AppBar, Toolbar, Typography, Button } from '@material-ui/core'
+import { withStyles, AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core'
+import ExitAppIcon from '@material-ui/icons/ExitToApp'
 
 export class Menu extends Component {
 
+
   renderMenuOptions = () => {
-    const { classes } = this.props
+    const { classes, location } = this.props
     const menuOptions = this.props.menuOptions || []
+    const classSelected = (option) => location.pathname === option.path ? classes.selected : ''
 
     return menuOptions.map((option, index) => (
-      <Button key={index} variant="contained" color="secondary" className={classes.menuButton}
-        onClick={() => this.props.history.push(option.path)}>
-        {/* onClick={() => console.log(option.path)}> */}
+      <Button key={index} variant="contained" color="secondary" className={`${classes.menuButton} ${classSelected(option)}`}
+        onClick={() => this.props.history.push(option.path)} >
         {option.label}
       </Button>
     ))
   }
+
+  handleLogout = () => {
+    helper.logOut()
+    this.props.history.push('/login')
+  };
 
   render() {
 
@@ -31,6 +39,10 @@ export class Menu extends Component {
             {
               this.renderMenuOptions()
             }
+            <IconButton className={`${classes.menuButton} ${classes.menuLogOut}`}
+              onClick={this.handleLogout}>
+              <ExitAppIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
       </div>
@@ -54,6 +66,12 @@ const styles = (theme) => ({
     fontWeight: 600,
     fontSize: 15,
     color: '#fff',
+  },
+  menuLogOut: {
+    marginRight: -5
+  },
+  selected: {
+    backgroundColor: theme.palette.secondary.dark,
   }
 })
 
