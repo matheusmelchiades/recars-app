@@ -4,7 +4,7 @@ import {
   Paper, withStyles, Table, TableHead,
   TableBody, TableCell, TableRow, Checkbox, Button
 } from '@material-ui/core'
-import CheckIcon from '@material-ui/icons/Check'
+// import CheckIcon from '@material-ui/icons/Check'
 
 export class Penging extends Component {
 
@@ -69,6 +69,15 @@ export class Penging extends Component {
     }
   }
 
+  handleCopy = (text) => {
+    const input = document.createElement('input');
+    input.setAttribute('value', text);
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input)
+  }
+
   render() {
     const { classes } = this.props
 
@@ -93,7 +102,7 @@ export class Penging extends Component {
                 <TableCell align="center">GeneralUse</TableCell>
                 <TableCell align="center">Competence</TableCell>
                 <TableCell align="center">Price Average</TableCell>
-                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">User</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -101,8 +110,11 @@ export class Penging extends Component {
                 this.state.pending.map((newCase, index) => {
                   const isSelected = this.itemIsSelected(newCase)
                   return (
-                    <TableRow key={index} hover selected={isSelected}
-                      onClick={() => this.selectItem(newCase)}>
+                    <TableRow key={index}
+                      className={newCase.error ? classes.error : ''}
+                      hover={!newCase.error} selected={isSelected}
+                      onClick={newCase.error ? () => ({}) : () => this.selectItem(newCase)}
+                      onDoubleClick={(e) => this.handleCopy(newCase._id)}>
                       <TableCell align="center">
                         <Checkbox checked={isSelected} />
                       </TableCell>
@@ -114,7 +126,7 @@ export class Penging extends Component {
                       <TableCell align="center">{newCase.competence}</TableCell>
                       <TableCell align="center">{newCase.priceAverage}</TableCell>
                       {/* <TableCell align="center"><CheckIcon /></TableCell> */}
-                      <TableCell align="center">{newCase.status}</TableCell>
+                      <TableCell align="center">{newCase.createdBy.username}</TableCell>
                     </TableRow>
                   )
                 })
@@ -122,7 +134,7 @@ export class Penging extends Component {
             </TableBody>
           </Table>
         </Paper>
-      </div>
+      </div >
     )
   }
 }
@@ -131,6 +143,9 @@ const styles = (theme) => ({
   container: {
     margin: theme.spacing.unit * 5,
     overflowX: 'auto'
+  },
+  error: {
+    backgroundColor: '#e57373'
   }
 })
 

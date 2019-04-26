@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { withStyles, Fab, TextField, InputAdornment } from '@material-ui/core';
+import { withStyles, Fab, TextField, InputAdornment, Button } from '@material-ui/core';
 import Dropdown from '../../../components/Dropdown';
 import * as API from '../../../services/api';
 
 import SearchIcon from '@material-ui/icons/Search'
 import CloseIcon from '@material-ui/icons/Close'
+import CardCar from '../../../components/CardCar';
 
 class Search extends Component {
   constructor(props) {
@@ -34,6 +35,8 @@ class Search extends Component {
         motor: '',
         priceAverage: ''
       },
+      result: [],
+      moreOptions: false,
       data: {}
     }
   }
@@ -45,6 +48,53 @@ class Search extends Component {
   clearAll = () => {
     this.setState({ ...this.getInitState() })
   }
+
+  handleSearch = async () => {
+    try {
+      const response = await API.search(this.state.search);
+
+      if (response.status !== 200) return
+
+      this.setState({ ...this.state, result: response.data })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  renderCarsTops = () => {
+    const { result } = this.state
+    const { classes } = this.props
+    const tops = result.slice(0, 3)
+
+    return (
+      <div className={classes.topsContainer}>
+        <h1>Tops</h1>
+        <div className={classes.tops}>
+          {
+            tops.map((car, index) => <CardCar key={index} car={car} />)
+          }
+        </div>
+      </div>
+    )
+  };
+
+  renderCarsOptions = () => {
+    const { result } = this.state
+    const { classes } = this.props
+    const options = result.slice(3, result.length)
+
+    return (
+      <div className={classes.optionContainer}>
+        <h1>Outras Opçoes</h1>
+        <div className={classes.options}>
+          {
+            options.map((car, index) => <CardCar key={index} car={car} />)
+          }
+        </div>
+        }
+      </div>
+    )
+  };
 
   render() {
     const { classes } = this.props;
@@ -80,11 +130,22 @@ class Search extends Component {
             }} />
 
           <div className={classes.button}>
-            <Fab color="primary" onClick={() => console.log(this.state.search)} aria-label="Add">
+            <Fab color="primary" onClick={this.handleSearch} aria-label="Add">
               <SearchIcon />
             </Fab>
           </div>
         </div>
+
+        {
+          this.state.result.length ? this.renderCarsTops() : false
+        }
+
+        {
+          this.state.result.length ? this.state.moreOptions ? this.renderCarsOptions()
+            : <Button onClick={() => this.setState({ ...this.state, moreOptions: true })}>Mais Opções</Button>
+            : false
+        }
+
       </div>
     )
   }
@@ -105,6 +166,26 @@ const styles = (theme) => ({
   },
   field: {
     margin: theme.spacing.unit
+  },
+  results: {
+    marginTop: theme.spacing.unit * 10,
+  },
+  topsContainer: {
+    marginTop: theme.spacing.unit * 15,
+  },
+  tops: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  optionContainer: {
+    marginTop: theme.spacing.unit * 15,
+  },
+  options: {
+    display: 'flex',
+    flexDirection: 'row',
+    margin: theme.spacing.unit,
+    overflowX: 'scroll',
   }
 });
 
