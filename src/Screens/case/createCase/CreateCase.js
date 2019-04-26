@@ -23,7 +23,6 @@ class CreateCase extends Component {
     return {
       clear: false,
       result: '',
-      selecteds: {},
       loader: {
         open: false,
         type: 'info',
@@ -75,7 +74,7 @@ class CreateCase extends Component {
       this.handlerSearchModel(input)
     }
 
-    this.setState({ newCase: stateInput }, this.handleResult)
+    this.setState({ newCase: stateInput })
   }
 
   renderSelect = (field, label, data) => {
@@ -103,11 +102,6 @@ class CreateCase extends Component {
         </Select>
       </FormControl>
     )
-  }
-
-  handleResult = (event) => {
-    const { newCase } = this.state
-    this.setState({ result: JSON.stringify(newCase) })
   }
 
   searchACarImages = async () => {
@@ -283,8 +277,14 @@ class CreateCase extends Component {
     return false
   }
 
+  handleSelectBrand = (item) => {
+    this.setState({ ...this.state, brandSelect: item, modelSelect: false }, this.state.clearModel)
+  };
+
   render() {
     const { classes } = this.props
+
+    console.log(this.state)
     return (
       <div className={classes.container}>
 
@@ -305,7 +305,7 @@ class CreateCase extends Component {
           <Autocomplete value={this.state.newCase.brand} label="Marca"
             clearInput={(clear) => this.setState({ clearBrand: clear })}
             data={this.state.data.brands} fieldRender="name" scroll noFilter
-            selectItem={(item) => this.setState({ brandSelect: item })}
+            selectItem={this.handleSelectBrand}
             onChange={(value) => this.handleChangeInput('brand', value)} />
 
           <Autocomplete value={this.state.newCase.model} label="Modelo"

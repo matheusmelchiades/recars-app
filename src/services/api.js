@@ -27,7 +27,8 @@ export const signup = (data) => {
 export const searchImageCar = (model = '', branch = '') => {
   return API({
     method: 'GET',
-    url: `/images?search=${model}%20${branch}`,
+    url: '/images',
+    params: { search: model, branch }
   })
 };
 
@@ -35,16 +36,19 @@ export const searchBrand = (brand) => {
   brand = brand.length > 2 ? brand.trim() : brand
   return API({
     method: 'GET',
-    url: `/brands?search=${brand}`,
+    url: `/brands`,
+    params: { search: brand }
   })
 }
 
 export const searchModel = (brand, model) => {
   brand = brand.length > 2 ? brand.trim() : brand
   model = model.length > 2 ? model.trim() : model
+
   return API({
     method: 'GET',
-    url: `/models?brand=${brand}&search=${model}`,
+    url: '/models',
+    params: { brand, model }
   })
 }
 
@@ -90,5 +94,13 @@ export const getAttributesTosSearch = () => {
   return API({
     method: 'GET',
     url: '/attributes/search'
+  })
+}
+
+export const search = (data) => {
+  return API({
+    method: 'POST',
+    url: '/search',
+    data
   })
 }
