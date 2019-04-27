@@ -102,6 +102,7 @@ export class Penging extends Component {
                 <TableCell align="center">GeneralUse</TableCell>
                 <TableCell align="center">Competence</TableCell>
                 <TableCell align="center">Price Average</TableCell>
+                <TableCell align="center">Quantity</TableCell>
                 <TableCell align="center">User</TableCell>
               </TableRow>
             </TableHead>
@@ -126,6 +127,7 @@ export class Penging extends Component {
                       <TableCell align="center">{newCase.competence}</TableCell>
                       <TableCell align="center">{newCase.priceAverage}</TableCell>
                       {/* <TableCell align="center"><CheckIcon /></TableCell> */}
+                      <TableCell align="center">{newCase.quantity}</TableCell>
                       <TableCell align="center">{newCase.createdBy.username}</TableCell>
                     </TableRow>
                   )
