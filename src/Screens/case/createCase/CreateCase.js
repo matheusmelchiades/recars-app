@@ -199,12 +199,10 @@ class CreateCase extends Component {
     try {
       const response = await API.createCase(this.state.newCase)
 
-      if (response.status >= 222) {
-        return this.showSnackBar('error', 'Caso ja cadastrado!')
+      if (response.status === 200) {
+        this.clearAll()
+        this.showSnackBar('success', 'Caso criado com sucesso!')
       }
-
-      this.clearAll()
-      this.showSnackBar('success', 'Caso criado com sucesso!')
     } catch (err) {
       console.log(err)
       this.showSnackBar('error', 'Erro em criar caso!')
