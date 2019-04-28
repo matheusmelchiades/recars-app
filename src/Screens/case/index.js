@@ -14,7 +14,7 @@ export class index extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loader: {
+      snackbar: {
         open: false,
         type: 'info',
         message: ''
@@ -38,8 +38,8 @@ export class index extends Component {
 
       this.setState({
         ...this.state,
-        loader: {
-          ...this.state.loader,
+        snackbar: {
+          ...this.state.snackbar,
           open: true,
           type: 'success',
           message: 'Autenticado com successo!'
@@ -49,8 +49,8 @@ export class index extends Component {
       console.log(err)
       this.setState({
         ...this.state,
-        loader: {
-          ...this.state.loader,
+        snackbar: {
+          ...this.state.snackbar,
           open: true,
           type: 'error',
           message: 'Usuario nao autenticado!'
@@ -74,10 +74,10 @@ export class index extends Component {
           </div>
         }
         <Snackbar
-          isOpen={this.state.loader.open}
-          type={this.state.loader.type}
-          message={this.state.loader.message}
-          onClose={() => this.setState({ ...this.state, loader: { ...this.state.loader, open: false } })} />
+          isOpen={this.state.snackbar.open}
+          type={this.state.snackbar.type}
+          message={this.state.snackbar.message}
+          onClose={() => this.setState({ ...this.state, snackbar: { ...this.state.snackbar, open: false } })} />
       </div>
     )
   }

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import helper from '../helper/auth'
 import { withRouter } from 'react-router-dom'
-import { withStyles, AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core'
+import { withStyles, AppBar, Toolbar, Button, IconButton } from '@material-ui/core'
 import ExitAppIcon from '@material-ui/icons/ExitToApp'
+import logoRecars from '../assets/logo_recars_branco.png'
 
 export class Menu extends Component {
-
 
   renderMenuOptions = () => {
     const { classes, location } = this.props
@@ -33,9 +33,9 @@ export class Menu extends Component {
       <div>
         <AppBar position="static">
           <Toolbar>
-            <Typography className={classes.logo} variant="h6" color="inherit">
-              Recars
-            </Typography>
+            <div className={classes.logo}>
+              <img src={logoRecars} height={80} alt="icon_image" />
+            </div>
             {
               this.renderMenuOptions()
             }

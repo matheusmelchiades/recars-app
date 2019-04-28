@@ -23,7 +23,7 @@ class CreateCase extends Component {
     return {
       clear: false,
       result: '',
-      loader: {
+      snackbar: {
         open: false,
         type: 'info',
         message: ''
@@ -265,8 +265,8 @@ class CreateCase extends Component {
   showSnackBar = (type, message) => {
     this.setState({
       ...this.setState,
-      loader: {
-        ...this.state.loader,
+      snackbar: {
+        ...this.state.snackbar,
         open: true,
         message,
         type
@@ -360,10 +360,10 @@ class CreateCase extends Component {
           />
         }
         <Snackbar
-          isOpen={this.state.loader.open}
-          type={this.state.loader.type}
-          message={this.state.loader.message}
-          onClose={() => this.setState({ ...this.state, loader: { ...this.state.loader, open: false } })} />
+          isOpen={this.state.snackbar.open}
+          type={this.state.snackbar.type}
+          message={this.state.snackbar.message}
+          onClose={() => this.setState({ ...this.state, snackbar: { ...this.state.loader, open: false } })} />
 
       </div>
     )
