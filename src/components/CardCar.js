@@ -73,7 +73,7 @@ export class CardCar extends Component {
             </Button>
           </CardContent>
 
-          <Collapse className={classes.teste} in={this.state.readMore} timeout={1000} unmountOnExit>
+          <Collapse className={classes.teste} in={this.state.readMore} timeout="auto" unmountOnExit>
             <CardContent>
               <Typography gutterBottom variant="h6" component="h5">
                 Anos: {car.years}
