@@ -1,33 +1,33 @@
 import React, { Component } from 'react'
-import { getPendencies, approvePendencies, deleteCases } from '../../../services/api'
+import { getApproved, deleteCases, approvePendencies } from '../../../services/api'
 import {
   Paper, withStyles, Table, TableHead,
   TableBody, TableCell, TableRow, Checkbox, Button, LinearProgress
 } from '@material-ui/core'
 
-export class Penging extends Component {
+class Approved extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      isLoading: true,
+      isLoading: false,
       selecteds: [],
-      pending: [],
+      cases: []
     }
   }
 
   componentDidMount() {
-    this.refresh()
+    this.fetchCases()
   }
 
-  refresh = async () => {
+  fetchCases = async () => {
     try {
       this.setState({ ...this.state, isLoading: true })
-      const response = await getPendencies();
+      const response = await getApproved();
 
       if (response.status !== 200) return
 
-      this.setState({ pending: response.data, isLoading: false })
+      this.setState({ cases: response.data, isLoading: false })
     } catch (err) {
       console.log(err)
     }
@@ -45,16 +45,15 @@ export class Penging extends Component {
 
   selectAll = () => {
     const lengthSelected = this.state.selecteds.length
-    const lengthPeding = this.state.pending.length || 0
+    const lengthPeding = this.state.cases.length || 0
 
     if (lengthSelected === lengthPeding)
       this.setState({ selecteds: [] })
     else
-      this.setState({ selecteds: [...this.state.pending] })
+      this.setState({ selecteds: [...this.state.cases] })
   }
 
   itemIsSelected = (item) => this.state.selecteds.some(selected => selected && selected._id === item._id)
-
 
   handleApproveSelecteds = async () => {
     try {
@@ -64,7 +63,7 @@ export class Penging extends Component {
 
       if (response.status !== 200) return
 
-      this.setState({ selected: [] }, this.refresh)
+      this.setState({ selected: [] }, this.fetchCases)
     } catch (err) {
       console.log(err)
     }
@@ -78,7 +77,7 @@ export class Penging extends Component {
 
       if (response.status !== 200) return
 
-      this.setState({ selected: [] }, this.refresh)
+      this.setState({ selected: [] }, this.fetchCases)
     } catch (err) {
       console.log(err)
     }
@@ -135,7 +134,7 @@ export class Penging extends Component {
             </TableHead>
             <TableBody>
               {
-                this.state.pending.map((newCase, index) => {
+                this.state.cases.map((newCase, index) => {
                   const isSelected = this.itemIsSelected(newCase)
                   return (
                     <TableRow key={index}
@@ -186,4 +185,4 @@ const styles = (theme) => ({
   }
 })
 
-export default withStyles(styles)(Penging)
+export default withStyles(styles)(Approved)

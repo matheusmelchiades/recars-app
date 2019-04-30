@@ -74,10 +74,25 @@ export const getPendencies = () => {
   })
 }
 
+export const getApproved = () => {
+  return API({
+    method: 'GET',
+    url: '/cases'
+  })
+}
+
 export const approvePendencies = (data) => {
   return API({
     method: 'POST',
     url: '/cases/pending',
+    data
+  })
+}
+
+export const deleteCases = (data) => {
+  return API({
+    method: 'DELETE',
+    url: '/cases',
     data
   })
 }

@@ -6,6 +6,7 @@ import Menu from '../../components/Menu'
 import Search from './search/index'
 import CreateCase from './createCase/CreateCase'
 import Penging from './penging/index'
+import Approved from './approved/index';
 import API from '../../services/api';
 import Snackbar from '../../components/Snackbar';
 
@@ -71,6 +72,7 @@ export class index extends Component {
             <Route path='/' exact component={Search} />
             <Route path='/case' component={CreateCase} />
             <Route path='/penging' component={Penging} />
+            <Route path='/cases' component={Approved} />
           </div>
         }
         <Snackbar

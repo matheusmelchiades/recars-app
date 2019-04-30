@@ -94,9 +94,9 @@ class CreateCase extends Component {
           }>
           {
             data && data.map((opt, index) => (
-              <MenuItem key={index} value={opt}
-                onChange={() => console.log(opt)}>
-                {opt}</MenuItem>
+              <MenuItem key={index} value={opt}>
+                {opt}
+              </MenuItem>
             ))
           }
         </Select>
