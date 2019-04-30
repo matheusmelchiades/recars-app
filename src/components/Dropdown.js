@@ -24,8 +24,7 @@ const Dropdown = ({ classes, data = [], label, value, selectItem, scroll }) => {
         MenuProps={MenuProps}>
         {
           data && data.map((opt, index) => (
-            <MenuItem key={index} value={opt}
-              onChange={() => console.log('menu', opt)}>
+            <MenuItem key={index} value={opt}>
               {opt}
             </MenuItem>
           ))

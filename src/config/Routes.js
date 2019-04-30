@@ -6,10 +6,6 @@ import Case from '../Screens/case/index'
 
 export default class Routes extends Component {
 
-  componentDidMount() {
-    console.log()
-  }
-
   render() {
     return (
       <BrowserRouter>

@@ -4,7 +4,6 @@ import {
   Paper, withStyles, Table, TableHead,
   TableBody, TableCell, TableRow, Checkbox, Button
 } from '@material-ui/core'
-// import CheckIcon from '@material-ui/icons/Check'
 
 export class Penging extends Component {
 
@@ -18,6 +17,7 @@ export class Penging extends Component {
 
   async componentDidMount() {
     this.refresh()
+    console.log('chamo')
   }
 
   refresh = async () => {
@@ -126,7 +126,6 @@ export class Penging extends Component {
                       <TableCell align="center">{newCase.generalUse}</TableCell>
                       <TableCell align="center">{newCase.competence}</TableCell>
                       <TableCell align="center">{newCase.priceAverage}</TableCell>
-                      {/* <TableCell align="center"><CheckIcon /></TableCell> */}
                       <TableCell align="center">{newCase.quantity}</TableCell>
                       <TableCell align="center">{newCase.createdBy.username}</TableCell>
                     </TableRow>
